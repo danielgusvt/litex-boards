@@ -19,6 +19,7 @@ from litex.soc.cores.clock import CycloneIVPLL
 from litex.soc.integration.soc_core import *
 from litex.soc.integration.builder import *
 from litex.soc.cores.led import LedChaser
+from litex.soc.cores.gpio import GPIOOut
 
 from litedram.modules import MT48LC4M16
 from litedram.phy import GENSDRPHY, HalfRateGENSDRPHY
@@ -59,7 +60,7 @@ class _CRG(Module):
 # BaseSoC ------------------------------------------------------------------------------------------
 
 class BaseSoC(SoCCore):
-    def __init__(self, sys_clk_freq=int(50e6), with_led_chaser=True, sdram_rate="1:1", **kwargs):
+    def __init__(self, sys_clk_freq=int(50e6), with_led_chaser=True, with_lcd_gpio=False, sdram_rate="1:1", **kwargs):
         platform = easyfpga.Platform()
 
         # Limit internal rom and sram size
@@ -93,6 +94,11 @@ class BaseSoC(SoCCore):
             self.submodules.leds = LedChaser(
                 pads         = platform.request_all("user_led"),
                 sys_clk_freq = sys_clk_freq)
+
+        # GPIOOut for LCD --------------------------------------------------------------------------
+        if with_lcd_gpio:
+            self.submodules.gpio = GPIOOut(platform.request("lcd_display"))
+
 
 # Build --------------------------------------------------------------------------------------------
 
