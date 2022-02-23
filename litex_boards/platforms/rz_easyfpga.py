@@ -20,11 +20,57 @@ _io = [
     ("user_led", 2, Pins("86"), IOStandard("3.3-V LVTTL")),
     ("user_led", 3, Pins("87"), IOStandard("3.3-V LVTTL")),
 
+    # DIP switches shared with buttons
+    ("key", 0, Pins("88"),  IOStandard("3.3-V LVTTL")),
+    ("key", 1, Pins("89"),  IOStandard("3.3-V LVTTL")),
+    ("key", 2, Pins("90"),  IOStandard("3.3-V LVTTL")),
+    ("key", 3, Pins("91"),  IOStandard("3.3-V LVTTL")),
+
+    # LM75A temperature sensor (I2C)
+    ("temp_i2c", 0,
+        Subsignal("scl", Pins("112")),
+        Subsignal("sda", Pins("113")),
+        IOStandard("3.3-V LVTTL")
+    ),
+
     # Serial
     ("serial", 0,
         # Uses the 9 pin serial connector
-        Subsignal("tx", Pins("114"), IOStandard("3.3-V LVTTL")),
-        Subsignal("rx", Pins("115"), IOStandard("3.3-V LVTTL"))
+        Subsignal("tx", Pins("114")),
+        Subsignal("rx", Pins("115")),
+        IOStandard("3.3-V LVTTL")
+    ),
+
+    # LCD display
+    ("lcd_display", 0,
+        Subsignal("data", Pins("142 1 144 3 2 10 7 11")),
+        Subsignal("rs",   Pins("141")),
+        Subsignal("rw",   Pins("138")),
+        Subsignal("e",    Pins("143")),
+        # Board provides 5V to display power pins, but it works fine with 3V3 on logic pins
+        IOStandard("3.3-V LVTTL")
+    ),
+
+    # 7 segment display
+    ("segled_an", 0,
+        Subsignal("ca",     Pins("128")),
+        Subsignal("cb",     Pins("121")),
+        Subsignal("cc",     Pins("125")),
+        Subsignal("cd",     Pins("129")),
+        Subsignal("ce",     Pins("132")),
+        Subsignal("cf",     Pins("126")),
+        Subsignal("cg",     Pins("124")),
+        Subsignal("dp",     Pins("127")),
+        Subsignal("digits", Pins("133 135 136 137")),
+        IOStandard("3.3-V LVTTL")
+    ),
+
+    # GPIO
+    # There are only 2 free gpio pins, the rest of the pins in the headers
+    # are shared with the other peripherals
+    ("gpio", 0, Pins(
+        "24 111"),
+        IOStandard("3.3-V LVTTL")
     ),
 
     # SDRAM
