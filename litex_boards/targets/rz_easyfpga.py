@@ -39,10 +39,11 @@ class _CRG(Module):
 
         # Clk / Rst
         clk50 = platform.request("clk50")
+        rst_n  = platform.request("rst_n")
 
         # PLL
         self.submodules.pll = pll = CycloneIVPLL(speedgrade="-8")
-        self.comb += pll.reset.eq(self.rst)
+        self.comb += pll.reset.eq(self.rst | ~rst_n)
         pll.register_clkin(clk50, 50e6)
         pll.create_clkout(self.cd_sys, sys_clk_freq)
         if sdram_rate == "1:2":

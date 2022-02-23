@@ -13,6 +13,7 @@ from litex.build.altera.programmer import USBBlaster
 _io = [
     # Clk
     ("clk50", 0, Pins("23"), IOStandard("3.3-V LVTTL")),
+    ("rst_n",  0, Pins("25"), IOStandard("3.3-V LVTTL")),
 
     # Leds
     ("user_led", 0, Pins("84"), IOStandard("3.3-V LVTTL")),
