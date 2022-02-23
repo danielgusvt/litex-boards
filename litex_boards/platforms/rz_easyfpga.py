@@ -38,7 +38,7 @@ _io = [
     ("serial", 0,
         # Uses the 9 pin serial connector
         Subsignal("tx", Pins("114")),
-        Subsignal("rx", Pins("115")),
+        Subsignal("rx", Pins("119")),
         IOStandard("3.3-V LVTTL")
     ),
 
