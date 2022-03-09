@@ -20,6 +20,7 @@ from litex.soc.integration.soc_core import *
 from litex.soc.integration.builder import *
 from litex.soc.cores.led import LedChaser
 from litex.soc.cores.gpio import GPIOOut
+from litex.soc.cores.gpio import GPIOTristate
 
 from litedram.modules import MT48LC4M16
 from litedram.phy import GENSDRPHY, HalfRateGENSDRPHY
@@ -98,6 +99,8 @@ class BaseSoC(SoCCore):
         # GPIOOut for LCD --------------------------------------------------------------------------
         if with_lcd_gpio:
             self.submodules.gpio = GPIOOut(platform.request("lcd_display"))
+        
+        self.submodules.gpio = GPIOTristate(platform.request("gpio"))
 
 
 # Build --------------------------------------------------------------------------------------------
