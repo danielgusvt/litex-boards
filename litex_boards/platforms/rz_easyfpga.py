@@ -22,14 +22,10 @@ _io = [
     ("user_led", 3, Pins("87"), IOStandard("3.3-V LVTTL")),
 
     # DIP switches shared with buttons
-    ("keys", 0, Pins("88 89 90 91"), IOStandard("3.3-V LVTTL")
-    ),
-
-    # DIP switches shared with buttons
-    # ("key", 0, Pins("88"),  IOStandard("3.3-V LVTTL")),
-    # ("key", 1, Pins("89"),  IOStandard("3.3-V LVTTL")),
-    # ("key", 2, Pins("90"),  IOStandard("3.3-V LVTTL")),
-    # ("key", 3, Pins("91"),  IOStandard("3.3-V LVTTL")),
+    ("key", 0, Pins("88"),  IOStandard("3.3-V LVTTL")),
+    ("key", 1, Pins("89"),  IOStandard("3.3-V LVTTL")),
+    ("key", 2, Pins("90"),  IOStandard("3.3-V LVTTL")),
+    ("key", 3, Pins("91"),  IOStandard("3.3-V LVTTL")),
 
     # LM75A temperature sensor (I2C)
     ("temp_i2c", 0,
@@ -74,7 +70,7 @@ _io = [
     # There are only 2 free gpio pins, the rest of the pins in the headers
     # are shared with the other peripherals
     ("gpio", 0, Pins(
-        "111"),
+        "24 111"),
         IOStandard("3.3-V LVTTL")
     ),
 
