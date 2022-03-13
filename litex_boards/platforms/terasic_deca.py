@@ -294,6 +294,7 @@ class Platform(AlteraPlatform):
 
     def __init__(self, toolchain="quartus"):
         AlteraPlatform.__init__(self, "10M50DAF484C6GES", _io, _connectors, toolchain=toolchain)
+        self.add_platform_command("set_global_assignment -name FAMILY \"MAX 10\"")
         # Disable config pin so bank8 can use 1.2V.
         self.add_platform_command("set_global_assignment -name AUTO_RESTART_CONFIGURATION ON")
         self.add_platform_command("set_global_assignment -name ENABLE_CONFIGURATION_PINS OFF")

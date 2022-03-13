@@ -102,6 +102,7 @@ class Platform(AlteraPlatform):
 
     def __init__(self, toolchain="quartus"):
         AlteraPlatform.__init__(self, "EP4CE6E22C8", _io, toolchain=toolchain)
+        self.add_platform_command("set_global_assignment -name FAMILY \"Cyclone IV E\"")
 
     def create_programmer(self):
         return USBBlaster()
