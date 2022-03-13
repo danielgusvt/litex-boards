@@ -131,7 +131,7 @@ def main():
     parser.add_argument("--eth-dynamic-ip",      action="store_true", help="Enable dynamic Ethernet IP addresses setting.")
     parser.add_argument("--with-uartbone",       action="store_true", help="Enable UARTbone support.")
     parser.add_argument("--with-jtagbone",       action="store_true", help="Enable JTAGbone support.")
-    parser.add_argument("--with-video-terminal", action="store_true", help="Enable Video Terminal (VGA).")
+    parser.add_argument("--with-video-terminal", action="store_true", help="Enable Video Terminal (HDMI).")
     builder_args(parser)
     soc_core_args(parser)
     args = parser.parse_args()
