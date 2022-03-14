@@ -90,6 +90,11 @@ class BaseSoC(SoCCore):
                 l2_cache_size = 0
             )
 
+        # SPI Flash --------------------------------------------------------------------------------
+        from litespi.modules import W25Q16JV
+        from litespi.opcodes import SpiNorFlashOpCodes as Codes
+        self.add_spi_flash(mode="1x", module=W25Q16JV(Codes.READ_1_1_1), with_master=False)
+
         # Leds -------------------------------------------------------------------------------------
         if with_led_chaser:
             self.submodules.leds = LedChaser(

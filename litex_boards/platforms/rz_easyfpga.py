@@ -34,6 +34,15 @@ _io = [
         IOStandard("3.3-V LVTTL")
     ),
 
+    ("spiflash", 0,
+        Subsignal("cs_n", Pins("8")),
+        Subsignal("clk", Pins("12")),
+        Subsignal("mosi", Pins("6")),
+        Subsignal("miso", Pins("13")),
+        # wp and hold pins are hardwired to 3v3
+        IOStandard("3.3-V LVTTL"),
+    ),
+
     # Serial
     ("serial", 0,
         # Uses the 9 pin serial connector
@@ -103,6 +112,12 @@ class Platform(AlteraPlatform):
     def __init__(self, toolchain="quartus"):
         AlteraPlatform.__init__(self, "EP4CE6E22C8", _io, toolchain=toolchain)
         self.add_platform_command("set_global_assignment -name FAMILY \"Cyclone IV E\"")
+        self.add_platform_command("set_global_assignment -name RESERVE_DATA0_AFTER_CONFIGURATION \"USE AS REGULAR IO\"")
+        self.add_platform_command("set_global_assignment -name RESERVE_DATA1_AFTER_CONFIGURATION \"USE AS REGULAR IO\"")
+        self.add_platform_command("set_global_assignment -name RESERVE_DCLK_AFTER_CONFIGURATION \"USE AS REGULAR IO\"")
+        self.add_platform_command("set_global_assignment -name CYCLONEII_RESERVE_NCEO_AFTER_CONFIGURATION \"USE AS REGULAR IO\"")
+        self.add_platform_command("set_global_assignment -name ENABLE_BOOT_SEL_PIN ON")
+        self.add_platform_command("set_global_assignment -name ENABLE_CONFIGURATION_PINS ON")
 
     def create_programmer(self):
         return USBBlaster()
