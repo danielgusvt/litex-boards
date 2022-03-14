@@ -17,6 +17,7 @@ from litex_boards.platforms import easyfpga
 
 from litex.soc.cores.clock import CycloneIVPLL
 from litex.soc.integration.soc_core import *
+from litex.soc.integration.soc import SoCRegion
 from litex.soc.integration.builder import *
 from litex.soc.cores.led import LedChaser
 from litex.soc.cores.gpio import GPIOOut
@@ -24,6 +25,8 @@ from litex.soc.cores.bitbang import I2CMaster
 
 from litedram.modules import MT48LC4M16
 from litedram.phy import GENSDRPHY, HalfRateGENSDRPHY
+
+kB = 1024
 
 # CRG ----------------------------------------------------------------------------------------------
 
@@ -61,12 +64,19 @@ class _CRG(Module):
 # BaseSoC ------------------------------------------------------------------------------------------
 
 class BaseSoC(SoCCore):
-    def __init__(self, sys_clk_freq=int(50e6), with_led_chaser=True, with_lcd_gpio=False, sdram_rate="1:1", **kwargs):
+    def __init__(self, bios_flash_offset, sys_clk_freq=int(50e6), with_led_chaser=True, with_lcd_gpio=False, sdram_rate="1:1", **kwargs):
         platform = easyfpga.Platform()
 
-        # Limit internal rom and sram size
-        kwargs["integrated_rom_size"]  = 0x6200
+        # Use external ROM since too large for Cyclone IV EP4CE6
+        kwargs["integrated_rom_size"]  = 0
         kwargs["integrated_sram_size"] = 0x1000
+
+        # Set reset address
+        #kwargs["cpu_reset_address"] = self.mem_map["spiflash"] + bios_flash_offset
+
+        # Limit internal rom and sram size
+ #       kwargs["integrated_rom_size"]  = 0x6200
+#        kwargs["integrated_sram_size"] = 0x1000
 
         # Can only support minimal variant of vexriscv
         if kwargs.get("cpu_type", "vexriscv") == "vexriscv":
@@ -95,6 +105,13 @@ class BaseSoC(SoCCore):
         from litespi.opcodes import SpiNorFlashOpCodes as Codes
         self.add_spi_flash(mode="1x", module=W25Q16JV(Codes.READ_1_1_1), with_master=False)
 
+        # Add ROM linker region --------------------------------------------------------------------
+        self.bus.add_region("rom", SoCRegion(
+            origin = self.bus.regions["spiflash"].origin + bios_flash_offset,
+            size   = 32*kB,
+            linker = True)
+        )
+
         # Leds -------------------------------------------------------------------------------------
         if with_led_chaser:
             self.submodules.leds = LedChaser(
@@ -116,11 +133,13 @@ def main():
     parser.add_argument("--load",         action="store_true", help="Load bitstream.")
     parser.add_argument("--sys-clk-freq", default=50e6,        help="System clock frequency.")
     parser.add_argument("--sdram-rate",   default="1:1",       help="SDRAM Rate (1:1 Full Rate or 1:2 Half Rate).")
+    parser.add_argument("--bios-flash-offset", default=0x20000,     help="BIOS offset in SPI Flash (default: 0x20000)")
     builder_args(parser)
     soc_core_args(parser)
     args = parser.parse_args()
 
     soc = BaseSoC(
+        bios_flash_offset = args.bios_flash_offset,
         sys_clk_freq = int(float(args.sys_clk_freq)),
         sdram_rate   = args.sdram_rate,
         **soc_core_argdict(args)
