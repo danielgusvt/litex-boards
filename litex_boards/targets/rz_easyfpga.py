@@ -103,7 +103,7 @@ class BaseSoC(SoCCore):
 
         # GPIOOut for LCD --------------------------------------------------------------------------
         if with_lcd_gpio:
-            self.submodules.gpio = GPIOOut(platform.request("lcd_display"))
+            self.submodules.gpio = GPIOOut(platform.request("irda"))
 
 #        self.submodules.i2c = I2CMaster(platform.request("temp_i2c"))
 
